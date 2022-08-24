@@ -1,3 +1,4 @@
+from calendar import c
 from random import randint
 from collections import Counter
 
@@ -95,12 +96,20 @@ def gerar_populacao():
 
 def calcular_aptidao(cromossomo):
     restricoes_duras = 100
-    restricoes_leves = 15
+
     lista_horarios_professor = []
     penalidade_colisao_professor = 0
-    penalidade_colisao_turma = 0
 
+    penalidade_colisao_turma = 0
     lista_horarios_turma = []
+
+    penalidade_capacidade_sala_insuficiente = 0
+
+    penalidade_tipo_local_incompativel = 0
+
+    restricoes_leves = 1
+
+    penalidade_local_indisponivel = 0
 
     for i in range(len(cromossomo)):
         professor = eventos[cromossomo[i][0]][1]
@@ -120,8 +129,49 @@ def calcular_aptidao(cromossomo):
         elif i <= 44:
             lista_horarios_professor.append(str(professor) + 'sex')
             lista_horarios_turma.append(str(turma) + 'sex')
-        else:
-            break
+
+        quantidade_alunos = eventos[cromossomo[i][0]][2]
+        tipo_local = eventos[cromossomo[i][0]][3]
+
+        if i == 0 or i == 9 or i == 18 or i == 27 or i == 36:  # L1
+            if quantidade_alunos < locais[0][1]:
+                penalidade_capacidade_sala_insuficiente += 1
+        elif i == 1 or i == 10 or i == 19 or i == 28 or i == 37:  # L2
+            penalidade_local_indisponivel += 1
+            if quantidade_alunos < locais[1][1]:
+                penalidade_capacidade_sala_insuficiente += 1
+
+        elif i == 2 or i == 11 or i == 20 or i == 29 or i == 38:  # L3
+            if quantidade_alunos < locais[2][1]:
+                penalidade_capacidade_sala_insuficiente += 1
+
+        elif i == 3 or i == 12 or i == 21 or i == 30 or i == 39:  # L4
+            if quantidade_alunos < locais[3][1]:
+                penalidade_capacidade_sala_insuficiente += 1
+
+        elif i == 4 or i == 13 or i == 22 or i == 31 or i == 40:  # L5
+            if quantidade_alunos < locais[4][1]:
+                penalidade_capacidade_sala_insuficiente += 1
+
+        elif i == 5 or i == 14 or i == 23 or i == 32 or i == 41:  # L6
+            if quantidade_alunos < locais[5][1]:
+                penalidade_capacidade_sala_insuficiente += 1
+        elif i == 6 or i == 15 or i == 24 or i == 33 or i == 42:  # S1
+            if quantidade_alunos < locais[6][1]:
+                penalidade_capacidade_sala_insuficiente += 1
+
+        elif i == 7 or i == 16 or i == 25 or i == 34 or i == 43:  # S2
+            if tipo_local == 1:
+                penalidade_tipo_local_incompativel += 1
+            if quantidade_alunos < locais[7][1]:
+                penalidade_capacidade_sala_insuficiente += 1
+
+        elif i == 8 or i == 17 or i == 26 or i == 35 or i == 44:  # S3
+            if tipo_local == 1:
+                penalidade_tipo_local_incompativel += 1
+            if quantidade_alunos < locais[8][1]:
+                penalidade_capacidade_sala_insuficiente += 1
+
     colisoes_professores = Counter(lista_horarios_professor).values()
     colisoes_turmas = Counter(lista_horarios_turma).values()
 
@@ -133,15 +183,21 @@ def calcular_aptidao(cromossomo):
         if elemento > 1:
             penalidade_colisao_turma += elemento * restricoes_duras
 
-    print(penalidade_colisao_professor)
+    penalidade_capacidade_sala_insuficiente *= restricoes_duras
+
+    penalidade_tipo_local_incompativel *= restricoes_duras
+
+    penalidade_local_indisponivel *= restricoes_leves
+
+    somatorio_penalidades = penalidade_local_indisponivel + penalidade_capacidade_sala_insuficiente + \
+        penalidade_colisao_professor + penalidade_colisao_turma + \
+        penalidade_tipo_local_incompativel
+
+    aptidao = 1 / (1 + somatorio_penalidades)
+
+    cromossomo.append(aptidao)
 
     return cromossomo
-
-
-cromo = [[15, 3, 22, 1], [15, 1, 35, 0], [26, 4, 35, 0], [20, 5, 33, 1], [14, 6, 24, 0], [15, 1, 36, 0], [26, 2, 46, 1], [20, 5, 20, 1], [10, 1, 31, 1], [27, 4, 32, 0], [9, 6, 14, 0], [2, 2, 5, 1], [21, 2, 25, 1], [27, 5, 14, 1], [19, 3, 37, 1], [10, 5, 13, 0], [11, 2, 25, 1], [5, 3, 15, 0], [22, 1, 42, 1], [32, 4, 34, 0], [13, 5, 30, 0], [19, 5, 39, 0], [15, 6, 24, 1], [7, 4, 49, 0], [15, 0, 44, 0], [15, 5, 40, 0], [7, 3, 15, 0], [9, 5, 14, 0], [32, 4, 5, 0], [31, 5, 18, 0], [7, 6, 37, 0], [30, 0, 6, 1], [28, 5, 39, 1], [29, 4, 45, 0], [15, 0, 18, 1], [15, 3, 48, 0], [30, 4, 9, 0], [27, 6, 37, 0], [17, 2, 50, 1], [23, 3, 35, 1], [11, 6, 17, 0], [28,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               5, 49, 1], [19, 2, 11, 1], [3, 5, 47, 0], [12, 2, 12, 1]]
-
-calcular_aptidao(cromo)
 
 
 def selecao_torneio(populacao):

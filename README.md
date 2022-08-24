@@ -19,14 +19,14 @@ A função deste algoritmo é resolver o **problema de calendário de aulas (Tim
 Como alocar os professores e suas disciplinas nos dias da semana e laboratórios de forma a respeitar:
 
 ### Restrições duras:
-- Professor não pode dar duas ou mais aulas no mesmo período
-- Mesma turma não pode ter duas ou mais aulas no mesmo período
-- Os tamanhos das salas e laboratórios devem estar adequados aos tamanhos das turmas
-- turmas práticas devem ser em laboratório(Labin)
+- Professor não pode dar duas ou mais aulas no mesmo período OK
+- Mesma turma não pode ter duas ou mais aulas no mesmo período OK
+- Os tamanhos das salas e laboratórios devem estar adequados aos tamanhos das turmas OK
+- turmas práticas devem ser em laboratório(Labin) OK
 
 ### Restrições leves:
-- Professor não pode dar aula em determinado dia
-- Determinado laboratório ou sala não está disponível em determinado dia
+- Professor não pode dar aula em determinado dia NÃO CONSTA NESTE CENÁRIO
+- Determinado laboratório ou sala não está disponível em determinado dia OK
 
 <sub>Obs: as aulas são de 2ª a 6ª</sub>
 
